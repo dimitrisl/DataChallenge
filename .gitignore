@@ -1,0 +1,7 @@
+/data
+/deep_learning
+/labs
+*.ipynb
+/data/*
+/deep_learning/*
+/labs/*
