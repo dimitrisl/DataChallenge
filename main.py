@@ -51,9 +51,9 @@ plt.title('Distribution of orders')
 plt.xlabel('Number of orders')
 plt.show()
 
-print "variance: ",orders_per_user.order_id.var()
-print "std: ",orders_per_user.order_id.std()
-print "mean: ",orders_per_user.order_id.mean()
+print "variance: ", orders_per_user.order_id.var()
+print "std: ", orders_per_user.order_id.std()
+print "mean: ", orders_per_user.order_id.mean()
 
 #Logistic regression
 logreg = LogisticRegression()
@@ -63,3 +63,4 @@ print X_train.head(4)
 
 #print y_pred.shape
 #print("logreg",accuracy_score(y_test["category"], y_pred))
+
