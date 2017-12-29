@@ -39,6 +39,7 @@ su = orders_df.merge(feature1, how="left",on="order_id")
 su.drop(['order_id','order_number', 'order_dow','order_hour_of_day','days_since_prior_order'], inplace = True, axis =1)
 su = su.groupby("user_id",as_index=False).ratio.mean()
 X_train = X_train.merge(su, how='inner', on=['user_id'])
+print X_train
 X_test = X_test.merge(su, how='inner', on=['user_id'])
 get_prediction(X_train, X_test, y_train, y_test)
 
