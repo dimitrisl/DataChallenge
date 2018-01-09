@@ -16,16 +16,16 @@ for id,name in zip(ids,names):
     key = 'product_id'
     columns = ['aisle_id', 'product_id', 'product_name']
 
-    get_items7 = order_products_prior_df.merge(products_df, how=how, on=key)
-    get_items7.drop(columns, inplace=True, axis=1)  # vriskoume ta antikeimena apo 7
+    get_all_items = order_products_prior_df.merge(products_df, how=how, on=key)
+    get_all_items.drop(columns, inplace=True, axis=1)  # vriskoume ta antikeimena apo 7
     fun = lambda x: 1 if x == id else 0
-    get_items7["department_id"] = get_items7['department_id'].apply(fun) # i turn every non department 7 id to 0 and every 7 to 1
+    get_all_items["department_id"] = get_all_items['department_id'].apply(fun) # i turn every non department 7 id to 0 and every 7 to 1
 
-    to_shop = get_items7.copy()
+    to_shop = get_all_items.copy()
 
-    all_items_7 = get_items7.groupby("order_id", as_index = False).department_id.sum()
+    all_items = get_all_items.groupby("order_id", as_index = False).department_id.sum()
     all_items_bought = to_shop.groupby("order_id", as_index = False).add_to_cart_order.max()
-    mid = all_items_7.merge(all_items_bought, how="left", on="order_id")
+    mid = all_items.merge(all_items_bought, how="left", on="order_id")
     mid = mid.rename(columns={"department_id":name})
     ratios = mid[name] / mid["add_to_cart_order"]
     ratios.columns = ["ratio"+name]

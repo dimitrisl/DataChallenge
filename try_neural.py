@@ -8,7 +8,7 @@ import numpy
 import pandas as pd
 numpy.random.seed(7)
 
-name = "with_20_features_x_"
+name = "with_11_features_x_"
 X_train = pd.read_csv("x_trains/%strain.csv"%name)
 y_train = pd.read_csv("data/y_train.csv")
 X_test = pd.read_csv("x_tests/%stest.csv"%name)
@@ -19,12 +19,16 @@ phase = "production"
 
 if phase == "production":
     model = Sequential()
-    model.add(Dense(X_train.shape[1], input_dim=X_train.shape[1],
+    model.add(Dense(X_train.shape[1] * 3, input_dim=X_train.shape[1],
                     init=keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None),
                     activation='tanh'))
+    model.add(Dense(X_train.shape[1] * 3, activation='tanh'))
+    model.add(Dense(X_train.shape[1] * 3, activation='tanh'))
+    model.add(Dense(X_train.shape[1] * 2, activation='tanh'))
+    model.add(Dense(X_train.shape[1], activation='tanh'))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
-    model.fit(X_train, y_train, epochs=2000, batch_size=X_train.shape[0])
+    model.fit(X_train, y_train, epochs=1020, batch_size=X_train.shape[0])
     predictions = model.predict(X_test)
     rounded = pd.DataFrame([int(round(x[0])) for x in predictions])
     rounded.columns = ["category"]
@@ -33,16 +37,21 @@ if phase == "production":
     submission.to_csv("%ssubmission.csv"%name,index=False)
 
 else:
+    # X_train.drop("ratio",axis=1,inplace = True)
+    # X_train.drop("orders_user",axis=1,inplace = True)
     X_train, X_test, y_train, y_test = train_test_split(X_train, y_train, test_size=0.33)
     try:
         model = Sequential()
-        model.add(Dense(X_train.shape[1], input_dim=X_train.shape[1],
+        model.add(Dense(X_train.shape[1]*3, input_dim=X_train.shape[1],
                         init=keras.initializers.RandomNormal(mean=0.0, stddev=0.05, seed=None),
                         activation='tanh'))
+        model.add(Dense(X_train.shape[1]*3, activation='tanh'))
+        model.add(Dense(X_train.shape[1]*3, activation='tanh'))
+        model.add(Dense(X_train.shape[1]*2, activation='tanh'))
         model.add(Dense(X_train.shape[1], activation='tanh'))
         model.add(Dense(1, activation='sigmoid'))
         model.compile(loss='binary_crossentropy', optimizer=Adam(), metrics=['accuracy'])
-        model.fit(X_train, y_train, epochs=10000, batch_size=X_train.shape[0])
+        model.fit(X_train, y_train, epochs=894, batch_size=X_train.shape[0])
     except KeyboardInterrupt:
         scores = model.evaluate(X_test, y_test)
         print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
